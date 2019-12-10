@@ -1,6 +1,7 @@
 import { Container } from 'typedi';
 import mongoose from 'mongoose';
 import { IUser } from '../../interfaces/IUser';
+import { LoggerInterface } from '../../interfaces/LoggerInterface';
 
 /**
  * Attach user to req.user

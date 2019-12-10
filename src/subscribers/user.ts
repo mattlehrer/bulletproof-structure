@@ -2,6 +2,7 @@ import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
 import events from './events';
 import { IUser } from '../interfaces/IUser';
+import { LoggerInterface } from '../interfaces/LoggerInterface';
 import mongoose from 'mongoose';
 
 @EventSubscriber()

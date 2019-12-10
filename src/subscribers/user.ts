@@ -18,10 +18,12 @@ export default class UserSubscriber {
    */
   @On(events.user.signIn)
   public onUserSignIn({ _id }: Partial<IUser>) {
-    const Logger = Container.get('logger');
+    const Logger: LoggerInterface = Container.get('logger');
 
     try {
-      const UserModel = Container.get('UserModel') as mongoose.Model<IUser & mongoose.Document>;
+      const UserModel = Container.get('UserModel') as mongoose.Model<
+        IUser & mongoose.Document
+      >;
 
       UserModel.update({ _id }, { $set: { lastLogin: new Date() } });
     } catch (e) {
@@ -33,7 +35,7 @@ export default class UserSubscriber {
   }
   @On(events.user.signUp)
   public onUserSignUp({ name, email, _id }: Partial<IUser>) {
-    const Logger = Container.get('logger');
+    const Logger: LoggerInterface = Container.get('logger');
 
     try {
       /**

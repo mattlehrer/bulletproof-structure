@@ -5,19 +5,24 @@ import config from '../config';
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
-import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from '../decorators/eventDispatcher';
 import events from '../subscribers/events';
 
 @Service()
 export default class AuthService {
   constructor(
-      @Inject('userModel') private userModel : Models.UserModel,
-      private mailer: MailerService,
-      @Inject('logger') private logger,
-      @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
+    @Inject('userModel') private userModel: Models.UserModel,
+    private mailer: MailerService,
+    @Inject('logger') private logger,
+    @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
-  public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUser; token: string }> {
+  public async SignUp(
+    userInputDTO: IUserInputDTO,
+  ): Promise<{ user: IUser; token: string }> {
     try {
       const salt = randomBytes(32);
 
@@ -72,7 +77,10 @@ export default class AuthService {
     }
   }
 
-  public async SignIn(email: string, password: string): Promise<{ user: IUser; token: string }> {
+  public async SignIn(
+    email: string,
+    password: string,
+  ): Promise<{ user: IUser; token: string }> {
     const userRecord = await this.userModel.findOne({ email });
     if (!userRecord) {
       throw new Error('User not registered');

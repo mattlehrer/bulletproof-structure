@@ -1,6 +1,7 @@
 import { Container } from 'typedi';
 import LoggerInstance from './logger';
 import agendaFactory from './agenda';
+import UserModel from '../models/user';
 import config from '../config';
 import mailgun from 'mailgun-js';
 
@@ -20,6 +21,7 @@ export default ({
 
     Container.set('agendaInstance', agendaInstance);
     Container.set('logger', LoggerInstance);
+    Container.set('UserModel', UserModel);
     Container.set(
       'emailClient',
       mailgun({ apiKey: config.emails.apiKey, domain: config.emails.domain }),

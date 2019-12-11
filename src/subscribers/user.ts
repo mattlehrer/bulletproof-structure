@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 @EventSubscriber()
 export default class UserSubscriber {
   /**
+   * From Bulletproof:
    * A great example of an event that you want to handle
    * save the last time a user signin, your boss will be pleased.
    *
@@ -18,15 +19,18 @@ export default class UserSubscriber {
    * then save the latest in Redis/Memcache or something similar
    */
   @On(events.user.signIn)
-  public onUserSignIn({ _id }: Partial<IUser>) {
+  public async onUserSignIn({ _id }: Partial<IUser>) {
     const Logger: LoggerInterface = Container.get('logger');
-
+    Logger.debug(_id);
     try {
-      const UserModel = Container.get('UserModel') as mongoose.Model<
-        IUser & mongoose.Document
-      >;
-
-      UserModel.update({ _id }, { $set: { lastLogin: new Date() } });
+      // const UserModel = Container.get('UserModel') as mongoose.Model<
+      //   IUser & mongoose.Document
+      // >;
+      // await UserModel.updateOne(
+      //   { _id },
+      //   { $set: { lastLogin: new Date() } },
+      //   Logger.silly,
+      // );
     } catch (e) {
       Logger.error(`🔥 Error on event ${events.user.signIn}: %o`, e);
 

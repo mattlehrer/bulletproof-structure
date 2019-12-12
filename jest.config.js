@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
+
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
@@ -5,31 +8,21 @@ module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
-  // Stop running tests after the first failure
-  // bail: false,
-
-  // Respect "browser" field in package.json when resolving modules
-  // browser: false,
-
-  // The directory where Jest should store its cached dependency information
-  // cacheDirectory: "/var/folders/bw/vvybgj3d3kgb98nzjxfmpv5c0000gn/T/jest_dx",
-
   // Automatically clear mock calls and instances between every test
   // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
-  // collectCoverage: false,
+  // Setup to collect coverage in CI and by running npm run test:coverage
+  // collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: null,
+  collectCoverageFrom: ['**/src/**/*.js', '**/src/**/*.ts', '!**/build/**/*'],
 
   // The directory where Jest should output its coverage files
-  // coverageDirectory: null,
+  coverageDirectory: path.join(__dirname, './coverage'),
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: ['/node_modules/', '.*/__tests__/.*'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -58,9 +51,7 @@ module.exports = {
   // globals: {},
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   "node_modules"
-  // ],
+  moduleDirectories: ['node_modules', 'test', 'src'],
 
   // An array of file extensions your modules use
   moduleFileExtensions: ['js', 'ts', 'json'],
@@ -110,10 +101,12 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['./test/setup-env.js'],
+  // setupFilesAfterEnv: ['./test/setup-env.js'],
+  // setupFilesAfterEnv: [require.resolve('./test/setup-env')],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
-  // setupTestFrameworkScriptFile: './tests/setup.js',
+  // setupTestFrameworkScriptFile: './test/setup-env.js',
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
@@ -129,8 +122,9 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    // '**/?(*.)+(spec|test).js?(x)',
+    '**/__tests__/**',
     '**/?(*.)+(spec|test).ts?(x)',
+    '!**/build/**/*',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
